@@ -4,6 +4,7 @@ class House {
   final String city;
   final int price;
   final String image;
+  final String between;
 
   House({
     required this.state,
@@ -11,5 +12,6 @@ class House {
     required this.price,
     required this.image,
     required this.name,
+    required this.between,
   });
 }
