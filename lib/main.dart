@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ideal/core/themes/dark_theme.dart';
+import 'package:ideal/core/themes/default_theme.dart';
 import 'package:ideal/ui/pages/home_page.dart';
+import 'package:ideal/ui/pages/house_detail_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,19 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          hintStyle: TextStyle(
-            color: Colors.grey[500],
-          ),
-        ),
-      ),
+      theme: defaultTheme,
       title: 'Ideal',
-      routes: {'/': (context) => const HomePage()},
+      routes: {
+        HomePage.routeName: (context) => const HomePage(),
+        HouseDetailPage.routeName: (context) => HouseDetailPage(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
