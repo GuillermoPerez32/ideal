@@ -5,6 +5,9 @@ class House {
   final int price;
   final String image;
   final String between;
+  final int bathrooms;
+  final int bedrooms;
+  final int meters;
 
   House({
     required this.state,
@@ -13,5 +16,8 @@ class House {
     required this.image,
     required this.name,
     required this.between,
+    required this.bathrooms,
+    required this.bedrooms,
+    required this.meters,
   });
 }

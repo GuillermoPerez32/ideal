@@ -55,7 +55,38 @@ class HouseCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(house.between)
+                  Text(
+                    house.between,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.black38,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.airline_seat_individual_suite_sharp,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text('${house.bedrooms}'),
+                      const SizedBox(width: 20),
+                      Icon(
+                        Icons.bathtub_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text('${house.bathrooms}'),
+                      const SizedBox(width: 20),
+                      Icon(
+                        Icons.picture_in_picture_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text('${house.meters} m'),
+                    ],
+                  )
                 ],
               ),
             ),
