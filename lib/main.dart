@@ -9,6 +9,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
+          hintStyle: TextStyle(
+            color: Colors.grey[500],
+          ),
+        ),
+      ),
       title: 'Ideal',
       routes: {'/': (context) => const HomePage()},
       debugShowCheckedModeBanner: false,
