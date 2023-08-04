@@ -73,14 +73,14 @@ class HouseCard extends StatelessWidget {
                       Text('${house.bedrooms}'),
                       const SizedBox(width: 20),
                       Icon(
-                        Icons.bathtub_outlined,
+                        Icons.bathtub_sharp,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
                       Text('${house.bathrooms}'),
                       const SizedBox(width: 20),
                       Icon(
-                        Icons.picture_in_picture_outlined,
+                        Icons.picture_in_picture_rounded,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 4),
