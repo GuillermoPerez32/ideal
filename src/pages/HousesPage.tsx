@@ -132,7 +132,7 @@ const HousesPage = () => {
           ))}
         </div>
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 flex justify-around p-4 bg-white border-t">
+      <nav className="sticky bottom-0 left-0 right-0 flex justify-around p-4 bg-white border-t">
         <Button
           onClick={() => setListingType("rent")}
           variant={listingType === "rent" ? "default" : "outline"}
