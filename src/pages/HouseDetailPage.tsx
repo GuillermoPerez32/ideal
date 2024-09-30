@@ -69,13 +69,13 @@ const HouseDetailPage = () => {
                 className="w-full h-full object-cover rounded-lg"
               />
             </div>
-            <div className="flex space-x-2 overflow-x-auto pb-2">
+            <div className="flex space-x-2 overflow-x-auto pb-2 ">
               {house.images.map((image, index) => (
                 <img
                   key={index}
                   src={image}
                   alt={`House thumbnail ${index + 1}`}
-                  className={`w-20 h-20 object-cover rounded cursor-pointer ${
+                  className={`w-20 h-20 object-cover rounded cursor-pointer m-1 ${
                     index === currentImage ? "ring-2 ring-blue-600" : ""
                   }`}
                   onClick={() => setCurrentImage(index)}

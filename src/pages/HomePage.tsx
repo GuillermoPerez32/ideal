@@ -48,8 +48,8 @@ const HomePage = () => {
       </header>
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-blue-900 text-white">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="container px-4 md:px-6 ">
+            <div className="flex flex-col items-center space-y-4 text-center ml-[60px]">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                   Encuentra tu hogar ideal
@@ -78,12 +78,12 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 ">
           <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 ml-[50px] ">
               Nuestros servicios
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-7 ml-[60px] ">
               <Card>
                 <CardHeader>
                   <Building className="h-8 w-8 mb-2 text-blue-600" />
@@ -130,11 +130,11 @@ const HomePage = () => {
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900">
+          <div className="container px-4 md:px-6 ">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-900 ml-[60px] ">
               Propiedades destacadas
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ml-[60px] ">
               {[1, 2, 3].map((i) => (
                 <Card key={i}>
                   <img
@@ -171,7 +171,7 @@ const HomePage = () => {
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-blue-900 text-white">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="flex flex-col items-center space-y-4 text-center ml-[60px]">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   ¿Listo para encontrar tu hogar ideal?
@@ -187,7 +187,7 @@ const HomePage = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="text-white border-white hover:bg-blue-800"
+                  className="text-black bg-gray-300 border-white-800 hover:bg-gray-400 hover: border-gray-400"
                 >
                   Explorar propiedades
                 </Button>
