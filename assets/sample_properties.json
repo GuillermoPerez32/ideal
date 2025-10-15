@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "title": "Lujoso Apartamento en el Centro",
+    "city": "Barcelona, España",
+    "price": 2500000,
+    "image": "https://picsum.photos/800/600?random=1",
+    "description": "Disfrute de la vida de lujo en el corazón de la ciudad con este impresionante apartamento. Con vistas panorámicas, acabados modernos y una ubicación inmejorable, esta propiedad ofrece la combinación perfecta de comodidad y estilo. Los espacios amplios y luminosos, junto con las comodidades de primer nivel, lo convierten en el lugar ideal para llamar hogar."
+  },
+  {
+    "id": "2",
+    "title": "Casa de 3 habitaciones en el centro",
+    "city": "Nueva York, NY",
+    "price": 500000,
+    "image": "https://picsum.photos/800/600?random=2",
+    "description": "Una hermosa casa familiar ubicada en una zona céntrica con fácil acceso a transporte público, escuelas y centros comerciales. Cuenta con 3 dormitorios amplios, 2 baños completos y un jardín privado."
+  },
+  {
+    "id": "3",
+    "title": "Apartamento moderno con vistas",
+    "city": "San Francisco, CA",
+    "price": 3000000,
+    "image": "https://picsum.photos/800/600?random=3",
+    "description": "Espectacular apartamento en el piso 20 con vistas panorámicas a la bahía. Acabados de lujo, cocina gourmet y terraza privada. Edificio con amenidades completas incluyendo gimnasio y piscina."
+  },
+  {
+    "id": "4",
+    "title": "Casa suburbana con gran patio",
+    "city": "Austin, TX",
+    "price": 750000,
+    "image": "https://picsum.photos/800/600?random=4",
+    "description": "Casa familiar perfecta en zona residencial tranquila. 4 dormitorios, 3 baños, garage para 2 autos y un gran patio trasero ideal para niños y mascotas. Cocina renovada recientemente."
+  },
+  {
+    "id": "5",
+    "title": "Loft urbano en el corazón de la ciudad",
+    "city": "Chicago, IL",
+    "price": 2900000,
+    "image": "https://picsum.photos/800/600?random=5",
+    "description": "Moderno loft en edificio histórico renovado. Techos altos, ventanales industriales, espacio abierto y ubicación premium en el distrito financiero. Perfecto para profesionales jóvenes."
+  },
+  {
+    "id": "6",
+    "title": "Acogedora casa de campo",
+    "city": "Nashville, TN",
+    "price": 420000,
+    "image": "https://picsum.photos/800/600?random=6",
+    "description": "Encantadora casa de estilo rústico en las afueras de la ciudad. 3 dormitorios, chimenea, porche amplio y 2 acres de terreno. Ideal para quienes buscan tranquilidad sin alejarse mucho de la ciudad."
+  },
+  {
+    "id": "7",
+    "title": "Ático de lujo con piscina privada",
+    "city": "Miami, FL",
+    "price": 1200000,
+    "image": "https://picsum.photos/800/600?random=7",
+    "description": "Exclusivo ático en el último piso con piscina privada en la terraza. Vistas al océano, acabados de primera calidad y acceso privado por ascensor. Incluye 2 lugares de estacionamiento."
+  },
+  {
+    "id": "8",
+    "title": "Casa moderna en zona exclusiva",
+    "city": "Seattle, WA",
+    "price": 1800000,
+    "image": "https://picsum.photos/800/600?random=8",
+    "description": "Casa contemporánea en prestigioso barrio residencial. Diseño minimalista, tecnología domótica, jardín landscapeado y vistas a las montañas. 4 dormitorios y estudio."
+  },
+  {
+    "id": "9",
+    "title": "Departamento vintage renovado",
+    "city": "Boston, MA",
+    "price": 850000,
+    "image": "https://picsum.photos/800/600?random=9",
+    "description": "Hermoso departamento en edificio histórico completamente renovado. Conserva detalles originales como molduras y pisos de madera, pero con todas las comodidades modernas."
+  },
+  {
+    "id": "10",
+    "title": "Villa mediterránea con piscina",
+    "city": "Los Angeles, CA",
+    "price": 3500000,
+    "image": "https://picsum.photos/800/600?random=10",
+    "description": "Espectacular villa de estilo mediterráneo en exclusiva zona residencial. 5 dormitorios, 4 baños, piscina infinita, jardín tropical y cancha de tenis privada."
+  }
+]
