@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
 class SearchBarWidget extends StatefulWidget {
   final void Function(String) onChanged;
@@ -12,9 +14,26 @@ class SearchBarWidget extends StatefulWidget {
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   final TextEditingController _controller = TextEditingController();
+  final _searchSubject = BehaviorSubject<String>();
+  StreamSubscription? _searchSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Debounce de 500ms - espera a que el usuario deje de escribir
+    _searchSubscription = _searchSubject
+        .debounceTime(const Duration(milliseconds: 500))
+        .distinct() // Evita búsquedas duplicadas consecutivas
+        .listen((query) {
+          widget.onChanged(query);
+        });
+  }
 
   @override
   void dispose() {
+    _searchSubscription?.cancel();
+    _searchSubject.close();
     _controller.dispose();
     super.dispose();
   }
@@ -31,7 +50,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       ),
       child: TextField(
         controller: _controller,
-        onChanged: widget.onChanged,
+        onChanged: (value) {
+          setState(() {}); // Para actualizar el botón de limpiar
+          _searchSubject.add(value); // Agregar al stream con debounce
+        },
         decoration: InputDecoration(
           hintText: widget.hintText ?? 'Buscar por ciudad, título...',
           hintStyle: TextStyle(
@@ -55,7 +77,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   ),
                   onPressed: () {
                     _controller.clear();
-                    widget.onChanged('');
+                    setState(() {});
+                    _searchSubject.add(''); // Limpiar búsqueda con debounce
                   },
                 )
               : null,

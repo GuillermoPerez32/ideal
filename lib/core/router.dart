@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/property_detail_screen.dart';
+import '../screens/favorites_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -10,6 +11,11 @@ final GoRouter router = GoRouter(
       path: '/',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/favorites',
+      name: 'favorites',
+      builder: (context, state) => const FavoritesScreen(),
     ),
     GoRoute(
       path: '/property/:id',
