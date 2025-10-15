@@ -78,4 +78,51 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('Theme toggle button is visible and works', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: IdealApp()));
+
+    await tester.pumpAndSettle();
+
+    // Find any theme toggle button (either dark_mode or light_mode icon)
+    final darkModeButton = find.byIcon(Icons.dark_mode);
+    final lightModeButton = find.byIcon(Icons.light_mode);
+
+    // One of them should be visible
+    expect(
+      darkModeButton.evaluate().isNotEmpty ||
+          lightModeButton.evaluate().isNotEmpty,
+      true,
+    );
+
+    // Tap whichever button is visible
+    if (darkModeButton.evaluate().isNotEmpty) {
+      await tester.tap(darkModeButton);
+      await tester.pumpAndSettle();
+      // After toggle, should show the opposite icon
+      expect(find.byIcon(Icons.light_mode), findsOneWidget);
+    } else {
+      await tester.tap(lightModeButton);
+      await tester.pumpAndSettle();
+      // After toggle, should show the opposite icon
+      expect(find.byIcon(Icons.dark_mode), findsOneWidget);
+    }
+  });
+
+  testWidgets('Theme toggle button exists', (WidgetTester tester) async {
+    await tester.pumpWidget(const ProviderScope(child: IdealApp()));
+
+    await tester.pumpAndSettle();
+
+    // Verify at least one theme icon is present
+    final themeButtons = find.byWidgetPredicate(
+      (widget) =>
+          widget is Icon &&
+          (widget.icon == Icons.dark_mode || widget.icon == Icons.light_mode),
+    );
+
+    expect(themeButtons, findsOneWidget);
+  });
 }

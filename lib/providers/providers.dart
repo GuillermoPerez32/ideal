@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import '../core/di.dart';
 import '../services/property_api_service.dart';
 import '../services/favorites_service.dart';
@@ -157,3 +158,22 @@ final propertiesNotifierProvider =
       final apiService = ref.read(propertyApiServiceProvider);
       return PropertiesNotifier(apiService);
     });
+
+// Provider para el tema (modo claro/oscuro)
+class ThemeModeNotifier extends StateNotifier<ThemeMode> {
+  ThemeModeNotifier() : super(ThemeMode.system);
+
+  void toggleTheme() {
+    state = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  }
+
+  void setThemeMode(ThemeMode mode) {
+    state = mode;
+  }
+}
+
+final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((
+  ref,
+) {
+  return ThemeModeNotifier();
+});

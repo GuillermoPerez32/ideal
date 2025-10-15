@@ -43,6 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final propertiesState = ref.watch(propertiesNotifierProvider);
     final favoritesState = ref.watch(favoritesNotifierProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final favoriteCount = favoritesState.maybeWhen(
       data: (favorites) => favorites.length,
       orElse: () => 0,
@@ -58,6 +59,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         actions: [
+          // Botón para cambiar tema
+          IconButton(
+            icon: Icon(
+              themeMode == ThemeMode.light ? Icons.dark_mode : Icons.light_mode,
+            ),
+            onPressed: () {
+              ref.read(themeModeProvider.notifier).toggleTheme();
+            },
+            tooltip: themeMode == ThemeMode.light
+                ? 'Modo Oscuro'
+                : 'Modo Claro',
+          ),
           // Botón de favoritos con badge
           Stack(
             children: [
