@@ -52,13 +52,14 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
-            // Habilitar minificación y ofuscación para producción
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            // Desactivar minificación para evitar problemas con R8
+            // Si quieres activarla, asegúrate de tener todas las reglas ProGuard correctas
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // proguardFiles(
+            //     getDefaultProguardFile("proguard-android-optimize.txt"),
+            //     "proguard-rules.pro"
+            // )
         }
     }
 }
