@@ -78,20 +78,23 @@ class PropertyDetailScreen extends ConsumerWidget {
           expandedHeight: 300,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
-            background: CachedNetworkImage(
-              imageUrl: property.image,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: Colors.grey[300],
-                child: const Center(child: CircularProgressIndicator()),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child: Icon(
-                    Icons.image_not_supported,
-                    size: 48,
-                    color: Colors.grey,
+            background: Hero(
+              tag: 'property-image-${property.id}',
+              child: CachedNetworkImage(
+                imageUrl: property.image,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),

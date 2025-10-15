@@ -31,29 +31,32 @@ class PropertyCard extends ConsumerWidget {
             // Imagen de la propiedad
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: property.image,
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      height: 200,
-                      color: Colors.grey[300],
-                      child: const Center(child: CircularProgressIndicator()),
+                Hero(
+                  tag: 'property-image-${property.id}',
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
                     ),
-                    errorWidget: (context, url, error) => Container(
+                    child: CachedNetworkImage(
+                      imageUrl: property.image,
                       height: 200,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 48,
-                          color: Colors.grey,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        height: 200,
+                        color: Colors.grey[300],
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        height: 200,
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 48,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
