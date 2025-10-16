@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/providers.dart';
 import '../models/property.dart';
+import '../l10n/app_localizations.dart';
+import '../features/settings/providers/settings_provider.dart';
+import '../core/utils/currency_formatter.dart';
 
 class PropertyDetailScreen extends ConsumerWidget {
   final String propertyId;
@@ -25,6 +28,8 @@ class PropertyDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildErrorWidget(BuildContext context, Object error, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Error')),
       body: Center(
@@ -36,7 +41,7 @@ class PropertyDetailScreen extends ConsumerWidget {
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               Text(
-                'Error al cargar la propiedad',
+                l10n.errorLoadingProperty,
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
@@ -51,7 +56,7 @@ class PropertyDetailScreen extends ConsumerWidget {
                 onPressed: () {
                   ref.invalidate(propertyDetailProvider(propertyId));
                 },
-                child: const Text('Reintentar'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -66,9 +71,17 @@ class PropertyDetailScreen extends ConsumerWidget {
     Property property,
     AsyncValue<Set<String>> favoritesState,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final isFavorite = favoritesState.maybeWhen(
       data: (favorites) => favorites.contains(property.id),
       orElse: () => false,
+    );
+
+    // Obtener configuración de moneda
+    final settingsAsync = ref.watch(preferencesServiceProvider);
+    final currency = settingsAsync.maybeWhen(
+      data: (_) => ref.watch(settingsProvider).currency,
+      orElse: () => 'USD',
     );
 
     return CustomScrollView(
@@ -168,19 +181,13 @@ class PropertyDetailScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '\$${_formatPrice(property.price)}',
+                          CurrencyFormatter.format(property.price, currency),
                           style: Theme.of(context).textTheme.headlineMedium
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
-                        if (property.price >= 1000)
-                          Text(
-                            '\$${property.price.toStringAsFixed(0)}',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey[600]),
-                          ),
                       ],
                     ),
                   ],
@@ -190,7 +197,7 @@ class PropertyDetailScreen extends ConsumerWidget {
 
                 // Descripción
                 Text(
-                  'Descripción',
+                  l10n.description,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -218,8 +225,8 @@ class PropertyDetailScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Contactar Agente',
+                    child: Text(
+                      l10n.contactAgent,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -237,32 +244,21 @@ class PropertyDetailScreen extends ConsumerWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    if (price >= 1000000) {
-      return '${(price / 1000000).toStringAsFixed(1)}M';
-    } else if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}K';
-    } else {
-      return price.toStringAsFixed(0);
-    }
-  }
-
   void _showContactDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Contactar Agente'),
-        content: const Text(
-          'Esta función conectaría con el agente inmobiliario para obtener más información sobre la propiedad.',
-        ),
+        title: Text(l10n.contactAgent),
+        content: Text(l10n.contactAgentDescription),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cerrar'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Entendido'),
+            child: Text(l10n.understood),
           ),
         ],
       ),

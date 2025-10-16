@@ -58,5 +58,11 @@
   "priceRange": "Rango de precio",
   "pageNotFound": "Página no encontrada",
   "goToHome": "Ir al inicio",
-  "error": "Error"
+  "error": "Error",
+  "errorLoadingProperty": "Error al cargar la propiedad",
+  "description": "Descripción",
+  "contactAgent": "Contactar agente",
+  "contactAgentDescription": "Esta es una aplicación de demostración. En una aplicación real, aquí se mostraría la información de contacto del agente.",
+  "cancel": "Cancelar",
+  "understood": "Entendido"
 }

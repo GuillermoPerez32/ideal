@@ -451,6 +451,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error'**
   String get error;
+
+  /// No description provided for @errorLoadingProperty.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al cargar la propiedad'**
+  String get errorLoadingProperty;
+
+  /// No description provided for @description.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get description;
+
+  /// No description provided for @contactAgent.
+  ///
+  /// In es, this message translates to:
+  /// **'Contactar agente'**
+  String get contactAgent;
+
+  /// No description provided for @contactAgentDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta es una aplicación de demostración. En una aplicación real, aquí se mostraría la información de contacto del agente.'**
+  String get contactAgentDescription;
+
+  /// No description provided for @cancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get cancel;
+
+  /// No description provided for @understood.
+  ///
+  /// In es, this message translates to:
+  /// **'Entendido'**
+  String get understood;
 }
 
 class _AppLocalizationsDelegate

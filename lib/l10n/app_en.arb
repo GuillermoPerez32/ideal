@@ -58,5 +58,11 @@
   "priceRange": "Price range",
   "pageNotFound": "Page not found",
   "goToHome": "Go to home",
-  "error": "Error"
+  "error": "Error",
+  "errorLoadingProperty": "Error loading property",
+  "description": "Description",
+  "contactAgent": "Contact agent",
+  "contactAgentDescription": "This is a demo application. In a real app, the agent's contact information would be shown here.",
+  "cancel": "Cancel",
+  "understood": "Got it"
 }

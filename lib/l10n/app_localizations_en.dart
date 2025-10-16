@@ -185,4 +185,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error => 'Error';
+
+  @override
+  String get errorLoadingProperty => 'Error loading property';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get contactAgent => 'Contact agent';
+
+  @override
+  String get contactAgentDescription =>
+      'This is a demo application. In a real app, the agent\'s contact information would be shown here.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get understood => 'Got it';
 }
