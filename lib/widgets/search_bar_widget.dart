@@ -40,53 +40,43 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+    return TextField(
+      controller: _controller,
+      onChanged: (value) {
+        setState(() {}); // Para actualizar el botón de limpiar
+        _searchSubject.add(value); // Agregar al stream con debounce
+      },
+      decoration: InputDecoration(
+        hintText: widget.hintText ?? 'Buscar por ciudad, título...',
+        hintStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
         ),
-      ),
-      child: TextField(
-        controller: _controller,
-        onChanged: (value) {
-          setState(() {}); // Para actualizar el botón de limpiar
-          _searchSubject.add(value); // Agregar al stream con debounce
-        },
-        decoration: InputDecoration(
-          hintText: widget.hintText ?? 'Buscar por ciudad, título...',
-          hintStyle: TextStyle(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          suffixIcon: _controller.text.isNotEmpty
-              ? IconButton(
-                  icon: Icon(
-                    Icons.clear,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                  onPressed: () {
-                    _controller.clear();
-                    setState(() {});
-                    _searchSubject.add(''); // Limpiar búsqueda con debounce
-                  },
-                )
-              : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
+        suffixIcon: _controller.text.isNotEmpty
+            ? IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+                onPressed: () {
+                  _controller.clear();
+                  setState(() {});
+                  _searchSubject.add(''); // Limpiar búsqueda con debounce
+                },
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
       ),
     );

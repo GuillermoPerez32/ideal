@@ -54,96 +54,169 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.appTitle,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      body: ref
+          .watch(filteredPropertiesProvider)
+          .when(
+            loading: () => CustomScrollView(
+              slivers: [
+                _buildSliverAppBar(context, l10n, favoriteCount),
+                SliverFillRemaining(child: _buildShimmerLoading()),
+              ],
+            ),
+            error: (error, stack) => CustomScrollView(
+              slivers: [
+                _buildSliverAppBar(context, l10n, favoriteCount),
+                SliverFillRemaining(child: _buildErrorWidget(error)),
+              ],
+            ),
+            data: (properties) =>
+                _buildMainContent(context, l10n, favoriteCount, properties),
+          ),
+    );
+  }
+
+  Widget _buildMainContent(
+    BuildContext context,
+    AppLocalizations l10n,
+    int favoriteCount,
+    List<Property> properties,
+  ) {
+    final filters = ref.watch(filtersProvider);
+    final searchQuery = ref.watch(searchQueryProvider);
+
+    if (properties.isEmpty) {
+      return CustomScrollView(
+        slivers: [
+          _buildSliverAppBar(context, l10n, favoriteCount),
+          SliverFillRemaining(
+            child: _buildEmptyState(l10n, filters, searchQuery),
+          ),
+        ],
+      );
+    }
+
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        _buildSliverAppBar(context, l10n, favoriteCount),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index == properties.length) {
+                // Indicador de carga al final
+                final notifier = ref.read(propertiesNotifierProvider.notifier);
+                if (notifier.hasMoreData) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                return const SizedBox.shrink();
+              }
+
+              final property = properties[index];
+              return PropertyCard(
+                property: property,
+                onTap: () => context.push('/property/${property.id}'),
+              );
+            }, childCount: properties.length + 1),
+          ),
         ),
-        elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        actions: [
-          // Botón de favoritos con badge
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.favorite),
-                onPressed: () => context.push('/favorites'),
-                tooltip: l10n.myFavorites,
-              ),
-              if (favoriteCount > 0)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+      ],
+    );
+  }
+
+  SliverAppBar _buildSliverAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    int favoriteCount,
+  ) {
+    return SliverAppBar(
+      floating: true,
+      pinned: true,
+      snap: true,
+      expandedHeight: 330,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      title: Text(
+        l10n.appTitle,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+      actions: [
+        // Botón de favoritos con badge
+        Stack(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.favorite),
+              onPressed: () => context.push('/favorites'),
+              tooltip: l10n.myFavorites,
+            ),
+            if (favoriteCount > 0)
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  child: Text(
+                    favoriteCount > 9 ? '9+' : '$favoriteCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
                     ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      favoriteCount > 9 ? '9+' : '$favoriteCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
+              ),
+          ],
+        ),
+        // Botón de perfil
+        IconButton(
+          icon: const Icon(Icons.person_outline),
+          onPressed: () => context.push('/profile'),
+          tooltip: l10n.myProfile,
+        ),
+        const SizedBox(width: 8),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        background: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // Barra de búsqueda
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: SearchBarWidget(
+                  hintText: l10n.searchProperties,
+                  onChanged: (query) {
+                    ref.read(searchQueryProvider.notifier).state = query;
+                    if (query.isNotEmpty) {
+                      ref
+                          .read(propertiesNotifierProvider.notifier)
+                          .searchProperties(query);
+                    } else {
+                      ref
+                          .read(propertiesNotifierProvider.notifier)
+                          .loadProperties(refresh: true);
+                    }
+                  },
+                ),
+              ),
+              // Barra de filtros
+              FilterBar(availableCities: ref.watch(availableCitiesProvider)),
+              const Divider(height: 1),
             ],
           ),
-          // Botón de perfil
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => context.push('/profile'),
-            tooltip: l10n.myProfile,
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Barra de búsqueda
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SearchBarWidget(
-              hintText: l10n.searchProperties,
-              onChanged: (query) {
-                ref.read(searchQueryProvider.notifier).state = query;
-                if (query.isNotEmpty) {
-                  ref
-                      .read(propertiesNotifierProvider.notifier)
-                      .searchProperties(query);
-                } else {
-                  ref
-                      .read(propertiesNotifierProvider.notifier)
-                      .loadProperties(refresh: true);
-                }
-              },
-            ),
-          ),
-
-          // Barra de filtros
-          FilterBar(availableCities: ref.watch(availableCitiesProvider)),
-          const Divider(height: 1),
-
-          // Lista de propiedades
-          Expanded(
-            child: ref
-                .watch(filteredPropertiesProvider)
-                .when(
-                  loading: () => _buildShimmerLoading(),
-                  error: (error, stack) => _buildErrorWidget(error),
-                  data: (properties) => _buildPropertiesList(properties),
-                ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -211,101 +284,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildPropertiesList(List<Property> properties) {
-    final l10n = AppLocalizations.of(context)!;
-    final filters = ref.watch(filtersProvider);
-    final searchQuery = ref.watch(searchQueryProvider);
+  Widget _buildEmptyState(
+    AppLocalizations l10n,
+    FiltersState filters,
+    String searchQuery,
+  ) {
+    final hasActiveFilters = filters.hasActiveFilters || searchQuery.isNotEmpty;
 
-    if (properties.isEmpty) {
-      return Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                filters.hasActiveFilters || searchQuery.isNotEmpty
-                    ? Icons.filter_list_off
-                    : Icons.search_off,
-                size: 80,
-                color: Colors.grey[400],
-              ),
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              hasActiveFilters ? Icons.filter_list_off : Icons.search_off,
+              size: 80,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 24),
+            Text(
+              l10n.noPropertiesFound,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              hasActiveFilters
+                  ? l10n.adjustFiltersOrSearch
+                  : l10n.noPropertiesAvailable,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            if (hasActiveFilters) ...[
               const SizedBox(height: 24),
-              Text(
-                l10n.noPropertiesFound,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                filters.hasActiveFilters || searchQuery.isNotEmpty
-                    ? l10n.adjustFiltersOrSearch
-                    : l10n.noPropertiesAvailable,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
-                textAlign: TextAlign.center,
-              ),
-              if (filters.hasActiveFilters || searchQuery.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (searchQuery.isNotEmpty) {
-                      ref.read(searchQueryProvider.notifier).state = '';
-                      ref
-                          .read(propertiesNotifierProvider.notifier)
-                          .loadProperties(refresh: true);
-                    }
-                    if (filters.hasActiveFilters) {
-                      ref.read(filtersProvider.notifier).clearFilters();
-                    }
-                  },
-                  icon: const Icon(Icons.clear_all),
-                  label: Text(l10n.clearFilters),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  if (searchQuery.isNotEmpty) {
+                    ref.read(searchQueryProvider.notifier).state = '';
+                    ref
+                        .read(propertiesNotifierProvider.notifier)
+                        .loadProperties(refresh: true);
+                  }
+                  if (filters.hasActiveFilters) {
+                    ref.read(filtersProvider.notifier).clearFilters();
+                  }
+                },
+                icon: const Icon(Icons.clear_all),
+                label: Text(l10n.clearFilters),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
                   ),
                 ),
-              ],
+              ),
             ],
-          ),
+          ],
         ),
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref
-            .read(propertiesNotifierProvider.notifier)
-            .loadProperties(refresh: true);
-      },
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.all(16),
-        itemCount: properties.length + 1, // +1 para el indicador de carga
-        itemBuilder: (context, index) {
-          if (index == properties.length) {
-            // Indicador de carga al final
-            final notifier = ref.read(propertiesNotifierProvider.notifier);
-            if (notifier.hasMoreData) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-            return const SizedBox.shrink();
-          }
-
-          final property = properties[index];
-          return PropertyCard(
-            property: property,
-            onTap: () => context.push('/property/${property.id}'),
-          );
-        },
       ),
     );
   }
