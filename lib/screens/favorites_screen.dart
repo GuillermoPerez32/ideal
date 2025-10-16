@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/providers.dart';
 import '../models/property.dart';
 import '../widgets/property_card.dart';
+import '../features/auth/providers/auth_provider.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -12,6 +13,7 @@ class FavoritesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesState = ref.watch(favoritesNotifierProvider);
     final propertiesState = ref.watch(propertiesNotifierProvider);
+    final authState = ref.watch(authProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -22,6 +24,24 @@ class FavoritesScreen extends ConsumerWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
+        actions: [
+          // Mostrar email si está autenticado
+          if (authState.isAuthenticated)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Center(
+                child: Text(
+                  authState.user?.email ?? '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => context.push('/profile'),
+            tooltip: 'Mi Perfil',
+          ),
+        ],
       ),
       body: favoritesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),

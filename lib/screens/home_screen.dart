@@ -5,6 +5,10 @@ import '../providers/providers.dart';
 import '../models/property.dart';
 import '../widgets/property_card.dart';
 import '../widgets/search_bar_widget.dart';
+import '../features/properties/providers/filtered_properties_provider.dart';
+import '../features/properties/providers/filters_provider.dart';
+import '../features/properties/presentation/widgets/filter_bar.dart';
+import '../features/properties/presentation/widgets/shimmer_placeholder.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -41,7 +45,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final propertiesState = ref.watch(propertiesNotifierProvider);
     final favoritesState = ref.watch(favoritesNotifierProvider);
     final themeMode = ref.watch(themeModeProvider);
     final favoriteCount = favoritesState.maybeWhen(
@@ -106,6 +109,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
             ],
           ),
+          // Botón de perfil
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => context.push('/profile'),
+            tooltip: 'Mi Perfil',
+          ),
           const SizedBox(width: 8),
         ],
       ),
@@ -130,13 +139,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
+          // Barra de filtros
+          FilterBar(availableCities: ref.watch(availableCitiesProvider)),
+          const Divider(height: 1),
+
           // Lista de propiedades
           Expanded(
-            child: propertiesState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => _buildErrorWidget(error),
-              data: (properties) => _buildPropertiesList(properties),
-            ),
+            child: ref
+                .watch(filteredPropertiesProvider)
+                .when(
+                  loading: () => _buildShimmerLoading(),
+                  error: (error, stack) => _buildErrorWidget(error),
+                  data: (properties) => _buildPropertiesList(properties),
+                ),
           ),
         ],
       ),
@@ -197,25 +212,75 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         : errorStr;
   }
 
+  Widget _buildShimmerLoading() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 5,
+      itemBuilder: (context, index) => const PropertyCardSkeleton(),
+    );
+  }
+
   Widget _buildPropertiesList(List<Property> properties) {
+    final filters = ref.watch(filtersProvider);
+    final searchQuery = ref.watch(searchQueryProvider);
+
     if (properties.isEmpty) {
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.search_off, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(
-              'No se encontraron propiedades',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Intenta con otros términos de búsqueda',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                filters.hasActiveFilters || searchQuery.isNotEmpty
+                    ? Icons.filter_list_off
+                    : Icons.search_off,
+                size: 80,
+                color: Colors.grey[400],
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'No se encontraron propiedades',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                filters.hasActiveFilters || searchQuery.isNotEmpty
+                    ? 'Intenta ajustar los filtros o términos de búsqueda'
+                    : 'No hay propiedades disponibles en este momento',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+              if (filters.hasActiveFilters || searchQuery.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (searchQuery.isNotEmpty) {
+                      ref.read(searchQueryProvider.notifier).state = '';
+                      ref
+                          .read(propertiesNotifierProvider.notifier)
+                          .loadProperties(refresh: true);
+                    }
+                    if (filters.hasActiveFilters) {
+                      ref.read(filtersProvider.notifier).clearFilters();
+                    }
+                  },
+                  icon: const Icon(Icons.clear_all),
+                  label: const Text('Limpiar filtros'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       );
     }

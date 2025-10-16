@@ -58,6 +58,10 @@ dependencies:
   
   # Reactive streams for debounce
   rxdart: ^0.28.0
+  intl: ^0.20.2
+  flutter_secure_storage: ^9.2.4
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

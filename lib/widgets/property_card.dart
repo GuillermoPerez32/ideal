@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/property.dart';
 import '../providers/providers.dart';
+import '../features/settings/providers/settings_provider.dart';
+import '../core/utils/currency_formatter.dart';
 
 class PropertyCard extends ConsumerWidget {
   final Property property;
@@ -16,6 +18,13 @@ class PropertyCard extends ConsumerWidget {
     final isFavorite = favoritesState.maybeWhen(
       data: (favorites) => favorites.contains(property.id),
       orElse: () => false,
+    );
+
+    // Obtener configuración de moneda
+    final settingsAsync = ref.watch(preferencesServiceProvider);
+    final currency = settingsAsync.maybeWhen(
+      data: (_) => ref.watch(settingsProvider).currency,
+      orElse: () => 'USD',
     );
 
     return Card(
@@ -128,7 +137,7 @@ class PropertyCard extends ConsumerWidget {
 
                   // Precio
                   Text(
-                    '\$${_formatPrice(property.price)}',
+                    CurrencyFormatter.format(property.price, currency),
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
@@ -141,15 +150,5 @@ class PropertyCard extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _formatPrice(double price) {
-    if (price >= 1000000) {
-      return '${(price / 1000000).toStringAsFixed(1)}M';
-    } else if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}K';
-    } else {
-      return price.toStringAsFixed(0);
-    }
   }
 }

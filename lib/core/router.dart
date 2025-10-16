@@ -4,6 +4,8 @@ import '../screens/home_screen.dart';
 import '../screens/property_detail_screen.dart';
 import '../screens/favorites_screen.dart';
 
+// DEPRECATED: Este router será reemplazado por app_router.dart
+// Mantenido temporalmente para compatibilidad
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
