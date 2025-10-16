@@ -60,12 +60,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             loading: () => CustomScrollView(
               slivers: [
                 _buildSliverAppBar(context, l10n, favoriteCount),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      FilterBar(
+                        key: const ValueKey('filter_bar'),
+                        availableCities: ref.watch(availableCitiesProvider),
+                      ),
+                      const Divider(height: 1),
+                    ],
+                  ),
+                ),
                 SliverFillRemaining(child: _buildShimmerLoading()),
               ],
             ),
             error: (error, stack) => CustomScrollView(
               slivers: [
                 _buildSliverAppBar(context, l10n, favoriteCount),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      FilterBar(
+                        key: const ValueKey('filter_bar'),
+                        availableCities: ref.watch(availableCitiesProvider),
+                      ),
+                      const Divider(height: 1),
+                    ],
+                  ),
+                ),
                 SliverFillRemaining(child: _buildErrorWidget(error)),
               ],
             ),
@@ -88,6 +110,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return CustomScrollView(
         slivers: [
           _buildSliverAppBar(context, l10n, favoriteCount),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                FilterBar(
+                  key: const ValueKey('filter_bar'),
+                  availableCities: ref.watch(availableCitiesProvider),
+                ),
+                const Divider(height: 1),
+              ],
+            ),
+          ),
           SliverFillRemaining(
             child: _buildEmptyState(l10n, filters, searchQuery),
           ),
@@ -99,6 +132,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       controller: _scrollController,
       slivers: [
         _buildSliverAppBar(context, l10n, favoriteCount),
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              FilterBar(
+                key: const ValueKey('filter_bar'),
+                availableCities: ref.watch(availableCitiesProvider),
+              ),
+              const Divider(height: 1),
+            ],
+          ),
+        ),
         SliverPadding(
           padding: const EdgeInsets.all(16),
           sliver: SliverList(
@@ -136,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       floating: true,
       pinned: true,
       snap: true,
-      expandedHeight: 330,
+      expandedHeight: 120,
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
       title: Text(
@@ -194,7 +238,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               // Barra de búsqueda
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: SearchBarWidget(
                   hintText: l10n.searchProperties,
                   onChanged: (query) {
@@ -211,9 +255,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   },
                 ),
               ),
-              // Barra de filtros
-              FilterBar(availableCities: ref.watch(availableCitiesProvider)),
-              const Divider(height: 1),
             ],
           ),
         ),

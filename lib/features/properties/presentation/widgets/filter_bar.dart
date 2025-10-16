@@ -3,16 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../providers/filters_provider.dart';
 
-class FilterBar extends ConsumerWidget {
+class FilterBar extends ConsumerStatefulWidget {
   final List<String> availableCities;
 
   const FilterBar({super.key, required this.availableCities});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FilterBar> createState() => _FilterBarState();
+}
+
+class _FilterBarState extends ConsumerState<FilterBar> {
+  RangeValues? _currentRangeValues;
+
+  @override
+  Widget build(BuildContext context) {
     final filters = ref.watch(filtersProvider);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+
+    // Initialize or sync the current range values
+    _currentRangeValues ??= RangeValues(filters.minPrice, filters.maxPrice);
+
+    // If filters were cleared externally, reset the local state
+    if (!filters.hasActiveFilters &&
+        (_currentRangeValues!.start != 0 ||
+            _currentRangeValues!.end != 1000000)) {
+      _currentRangeValues = RangeValues(filters.minPrice, filters.maxPrice);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +72,7 @@ class FilterBar extends ConsumerWidget {
         ),
 
         // Ciudades
-        if (availableCities.isNotEmpty) ...[
+        if (widget.availableCities.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(l10n.cities, style: theme.textTheme.labelLarge),
@@ -65,9 +82,9 @@ class FilterBar extends ConsumerWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              itemCount: availableCities.length,
+              itemCount: widget.availableCities.length,
               itemBuilder: (context, index) {
-                final city = availableCities[index];
+                final city = widget.availableCities[index];
                 final isSelected = filters.selectedCities.contains(city);
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -95,7 +112,7 @@ class FilterBar extends ConsumerWidget {
                 children: [
                   Text(l10n.priceRange, style: theme.textTheme.labelLarge),
                   Text(
-                    '\$${filters.minPrice.toInt()} - \$${filters.maxPrice.toInt()}',
+                    '\$${_currentRangeValues!.start.toInt()} - \$${_currentRangeValues!.end.toInt()}',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.bold,
@@ -104,15 +121,20 @@ class FilterBar extends ConsumerWidget {
                 ],
               ),
               RangeSlider(
-                values: RangeValues(filters.minPrice, filters.maxPrice),
+                values: _currentRangeValues!,
                 min: 0,
                 max: 1000000,
                 divisions: 100,
                 labels: RangeLabels(
-                  '\$${filters.minPrice.toInt()}',
-                  '\$${filters.maxPrice.toInt()}',
+                  '\$${_currentRangeValues!.start.toInt()}',
+                  '\$${_currentRangeValues!.end.toInt()}',
                 ),
                 onChanged: (values) {
+                  setState(() {
+                    _currentRangeValues = values;
+                  });
+                },
+                onChangeEnd: (values) {
                   ref
                       .read(filtersProvider.notifier)
                       .setPriceRange(values.start, values.end);
