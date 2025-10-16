@@ -21,90 +21,147 @@ https://github.com/user-attachments/assets/demo.mp4
 
 ### ✨ Funcionalidades Principales
 
+- **Autenticación**: Sistema de login con validación y almacenamiento seguro de tokens
 - **Lista de propiedades**: Navegación con scroll infinito y paginación inteligente
 - **Búsqueda con debounce**: Filtro optimizado por título o ciudad (500ms de espera)
+- **Filtros avanzados**: Por ciudad, rango de precio y ordenamiento
 - **Favoritos persistentes**: Marca propiedades como favoritas con almacenamiento local
-- **Detalles completos**: Vista detallada de cada propiedad con Hero animations
-- **Tema claro/oscuro**: Cambio dinámico entre temas con un botón en el AppBar
+- **Detalles completos**: Vista detallada con SliverAppBar colapsable y Hero animations
+- **Perfil de usuario**: Pantalla de perfil con información y navegación a favoritos/ajustes
+- **Configuración**: Tema (sistema/claro/oscuro), idioma (ES/EN), moneda (USD/EUR)
+- **Internacionalización**: Soporte completo para español e inglés
 - **Shimmer loading**: Efectos de carga tipo skeleton para mejor UX
-- **Navegación fluida**: Implementada con GoRouter y transiciones suaves
+- **Navegación protegida**: Rutas con guards de autenticación usando GoRouter
 - **Cache de imágenes**: Carga optimizada con cached_network_image
 
 ### 🎨 Diseño y UX
 
 - **Material Design 3**: Diseño moderno y consistente
-- **Temas personalizados**: Sistema de temas bien estructurado y mantenible
+- **SliverAppBar colapsable**: Header que se colapsa al scrollear para más espacio
+- **Temas personalizados**: Sistema/Claro/Oscuro con cambio dinámico
 - **Modo oscuro**: Soporte completo con colores optimizados
 - **Animaciones**: Hero animations en imágenes de propiedades
 - **Badge de favoritos**: Contador visual en el AppBar
 - **Estados de carga**: Shimmer placeholders en lugar de spinners
+- **Empty states**: Mensajes contextuales con CTAs cuando no hay resultados
 
 ## 🛠️ Tecnologías
 
 ### Core
 
-- **Flutter SDK**: 3.35.3 - Framework principal multiplataforma
-- **Dart SDK**: 3.9.2 - Lenguaje de programación
+- **Flutter SDK**: ^3.9.2 - Framework principal multiplataforma
+- **Dart SDK**: ^3.9.2 - Lenguaje de programación
 
 ### Estado y Navegación
 
-- **Riverpod**: 2.5.1 - Gestión de estado reactiva y robusta
-- **GoRouter**: 14.2.7 - Navegación declarativa con rutas tipadas
+- **flutter_riverpod**: ^2.5.1 - Gestión de estado reactiva y robusta con StateNotifier
+- **go_router**: ^14.2.7 - Navegación declarativa con guards de autenticación
 
 ### Networking y Persistencia
 
-- **HTTP**: 1.2.2 - Cliente HTTP para consumo de APIs
-- **Shared Preferences**: 2.3.2 - Persistencia local de favoritos
+- **HTTP**: ^1.2.2 - Cliente HTTP para consumo de APIs
+- **shared_preferences**: ^2.3.2 - Persistencia local de preferencias y favoritos
+- **flutter_secure_storage**: ^9.2.4 - Almacenamiento seguro de tokens de autenticación
 - **MockAPI.io**: Servicio de API REST simulada
+
+### Internacionalización
+
+- **flutter_localizations**: SDK - Localización de Flutter
+- **intl**: ^0.20.2 - Formateo de números, fechas y monedas (USD/EUR)
+- **ARB files**: Sistema de traducción con app_es.arb y app_en.arb
 
 ### UI y Assets
 
-- **Cached Network Image**: 3.4.1 - Cache inteligente de imágenes
-- **Shimmer**: 3.0.0 - Efectos de carga skeleton
-- **RxDart**: 0.28.0 - Streams reactivos para debounce de búsqueda
+- **cached_network_image**: ^3.4.1 - Cache inteligente de imágenes con rendimiento optimizado
+- **shimmer**: ^3.0.0 - Efectos de carga skeleton para mejor UX
+- **rxdart**: ^0.28.0 - Streams reactivos para debounce de búsqueda (500ms)
 
 ### Herramientas de Desarrollo
 
-- **Get It**: 8.0.0 - Inyección de dependencias (Service Locator)
-- **JSON Annotation**: 4.9.0 - Anotaciones para serialización
-- **JSON Serializable**: 6.8.0 - Generación de código para JSON
-- **Build Runner**: 2.4.13 - Herramienta de generación de código
+- **very_good_analysis**: ^6.0.0 - Reglas de linting estrictas para código de calidad
+- **JSON Annotation**: ^4.9.0 - Anotaciones para serialización JSON
+- **JSON Serializable**: ^6.8.0 - Generación automática de código para modelos
+- **Build Runner**: ^2.4.13 - Herramienta de generación de código
 
 ## 📱 Estructura del Proyecto
 
 ```
 lib/
 ├── core/
-│   ├── app.dart                # Widget principal de la app (Consumer)
-│   ├── di.dart                 # Configuración de dependencias (GetIt)
-│   ├── router.dart             # Configuración de rutas (GoRouter)
-│   └── theme.dart              # Sistema de temas claro/oscuro
+│   ├── app.dart                    # MaterialApp con router y localización
+│   ├── di.dart                     # Inyección de dependencias
+│   ├── theme.dart                  # Temas Material 3 (claro/oscuro)
+│   └── router/
+│       └── app_router.dart         # GoRouter con guards de autenticación
+├── features/
+│   ├── auth/
+│   │   ├── data/
+│   │   │   └── auth_repository.dart       # Repositorio de autenticación
+│   │   ├── domain/
+│   │   │   └── auth_state.dart            # Estados de autenticación
+│   │   ├── presentation/
+│   │   │   └── screens/
+│   │   │       └── login_screen.dart      # Pantalla de login
+│   │   └── providers/
+│   │       └── auth_provider.dart         # Provider de autenticación
+│   ├── profile/
+│   │   └── presentation/
+│   │       └── screens/
+│   │           └── profile_screen.dart    # Pantalla de perfil de usuario
+│   ├── settings/
+│   │   ├── data/
+│   │   │   ├── preferences_service.dart   # Servicio de preferencias
+│   │   │   └── settings_repository.dart   # Repositorio de configuración
+│   │   ├── domain/
+│   │   │   └── settings_state.dart        # Estado de configuración
+│   │   ├── presentation/
+│   │   │   └── screens/
+│   │   │       └── settings_screen.dart   # Pantalla de ajustes
+│   │   └── providers/
+│   │       └── settings_provider.dart     # Provider de settings
+│   └── properties/
+│       ├── data/
+│       │   ├── properties_repository.dart # Repositorio de propiedades
+│       │   └── favorites_repository.dart  # Repositorio de favoritos
+│       ├── domain/
+│       │   ├── property.dart              # Modelo de propiedad
+│       │   └── filters_state.dart         # Estado de filtros
+│       ├── presentation/
+│       │   ├── screens/
+│       │   │   └── property_detail_screen.dart  # Detalle con SliverAppBar
+│       │   └── widgets/
+│       │       ├── property_card.dart           # Card reutilizable
+│       │       ├── shimmer_placeholder.dart     # Skeleton loader
+│       │       ├── search_bar_widget.dart       # Búsqueda con debounce
+│       │       └── filter_bar.dart              # Filtros (ciudad, precio, sort)
+│       └── providers/
+│           ├── properties_provider.dart         # Provider de propiedades
+│           ├── favorites_provider.dart          # Provider de favoritos
+│           ├── filters_provider.dart            # Provider de filtros
+│           └── filtered_properties_provider.dart # Combinación de filtros
+├── l10n/
+│   ├── app_localizations.dart      # Clase generada de localizaciones
+│   ├── app_en.arb                  # Traducciones en inglés (60+ keys)
+│   └── app_es.arb                  # Traducciones en español (60+ keys)
 ├── models/
-│   ├── property.dart           # Modelo de propiedad con JSON
-│   └── paginated_response.dart # Modelo de respuesta paginada
-├── providers/
-│   └── providers.dart          # Providers de Riverpod + ThemeMode
+│   └── paginated_response.dart     # Modelo de respuesta paginada
 ├── screens/
-│   ├── home_screen.dart        # Pantalla principal con búsqueda
-│   ├── property_detail_screen.dart # Detalle con Hero animation
-│   └── favorites_screen.dart   # Pantalla de favoritos
+│   ├── home_screen.dart            # Pantalla principal con SliverAppBar
+│   └── favorites_screen.dart       # Pantalla de favoritos
 ├── services/
-│   ├── property_api_service.dart   # Servicio de API con isolates
-│   └── favorites_service.dart      # Servicio de favoritos con cache
-├── widgets/
-│   ├── property_card.dart          # Card de propiedad reutilizable
-│   ├── property_card_shimmer.dart  # Placeholder shimmer
-│   ├── search_bar_widget.dart      # Búsqueda con debounce
-│   └── filters_bottom_sheet.dart   # Bottom sheet de filtros
+│   └── currency_formatter.dart     # Formateador USD/EUR
 └── main.dart                       # Punto de entrada con ProviderScope
 
+l10n.yaml                           # Configuración de generación l10n
+pubspec.yaml                        # Dependencias y assets
+
 test/
-└── widget_test.dart            # 7 tests de widgets (todos pasando ✅)
+└── widget_test.dart                # Tests de widgets
 
 docs/
-├── home.png                    # Screenshot de pantalla principal
-├── detail.png                  # Screenshot de detalle
-└── demo.mp4                    # Video de demostración
+├── home.png                        # Screenshots
+├── detail.png
+└── demo.mp4                        # Video demostración
 ```
 
 ## 🚀 Configuración
@@ -243,49 +300,83 @@ flutter test --plain-name "Theme toggle button is visible and works"
 
 ## 📱 Funcionalidades Principales
 
+### 🔐 Autenticación
+
+- **Login con validación**: Email debe contener '@', contraseña mínimo 6 caracteres
+- **Almacenamiento seguro**: Tokens guardados en flutter_secure_storage
+- **Guards de rutas**: Redirección automática si no estás autenticado
+- **Logout**: Limpieza completa de sesión y redirección a login
+
 ### 🏠 Pantalla Principal (Home)
 
-- **Lista de propiedades** con imágenes en alta calidad
+- **SliverAppBar colapsable** con búsqueda que se expande/colapsa
+- **Lista de propiedades** con imágenes en alta calidad y paginación
 - **Barra de búsqueda** en tiempo real con debounce de 500ms
-- **Scroll infinito** para carga progresiva de más datos
+- **Filtros avanzados**:
+  - Ciudades con chips seleccionables
+  - Rango de precio con RangeSlider (0 - 1M)
+  - Ordenamiento: Precio (bajo-alto), Precio (alto-bajo), Ciudad (A-Z)
+  - Botón de limpiar filtros cuando hay filtros activos
+- **Scroll infinito** para carga progresiva (10 items por página)
 - **Shimmer loading** mientras se cargan las propiedades
 - **Badge de favoritos** con contador en el AppBar
-- **Botón de cambio de tema** (claro ↔ oscuro)
+- **Botón de perfil** con acceso a configuración
 - **Hero animations** en las imágenes de propiedades
-- **Botón de favorito** en cada card (sincronizado con estado global)
+- **Empty states** con mensajes contextuales y CTAs
 
 ### 🏡 Pantalla de Detalle
 
-- **Imagen grande** de la propiedad con Hero animation
-- **Información completa**: título, precio, ubicación, descripción
-- **Características** de la propiedad (preparado para expansión)
-- **Botón de favorito persistente** con estado sincronizado
+- **SliverAppBar** con imagen grande y Hero animation
+- **Información completa**: título, precio formateado, ubicación, descripción
+- **Precio con formato**: Cambia entre USD/EUR según configuración
+- **Botón de favorito flotante** con estado sincronizado
 - **Navegación suave** con transición animada
-- **Scroll view** para contenido largo
+- **Scroll view** expandible para contenido largo
+- **Traducciones completas** en ES/EN
 
 ### ❤️ Pantalla de Favoritos
 
-- **Lista de propiedades favoritas** persistente
+- **Lista de propiedades favoritas** persistente con SharedPreferences
 - **Estado vacío** con ilustración cuando no hay favoritos
-- **Contador** de favoritos en el header
+- **Contador** de favoritos en el header y badge
 - **Sincronización** automática al marcar/desmarcar
 - **Mismo diseño** que la pantalla principal para consistencia
+- **Navegación** a detalle con Hero animation
 
-### 🎨 Sistema de Temas
+### 👤 Pantalla de Perfil
 
-- **Tema claro**: Optimizado para uso diurno
-- **Tema oscuro**: Reduce fatiga visual nocturna
-- **Botón de toggle**: En el AppBar de la pantalla principal
-- **Cambio instantáneo**: Sin recargar la app
-- **Persistencia**: El tema seleccionado se mantiene (preparado)
+- **Información del usuario**: Nombre, email, avatar
+- **Estadísticas**: Contador de favoritos
+- **Navegación rápida**: Botones a Favoritos y Configuración
+- **Logout**: Cerrar sesión con confirmación
+- **Diseño Material 3**: Cards con elevación y espaciado consistente
 
-### 🔍 Búsqueda Optimizada
+### ⚙️ Pantalla de Configuración
 
-- **Debounce de 500ms**: Reduce llamadas innecesarias a la API
+- **Tema**: Sistema / Claro / Oscuro con RadioListTile
+- **Idioma**: Español / English con cambio en tiempo real
+- **Moneda**: USD / EUR con actualización reactiva en toda la app
+- **Limpiar caché**: Botón para resetear favoritos y preferencias
+- **Persistencia**: Todas las configuraciones se guardan en SharedPreferences
+- **Traducciones completas**: Todos los textos localizados
+
+### 🌐 Internacionalización (i18n)
+
+- **Soporte completo** para Español e Inglés
+- **60+ traducciones**: Todas las pantallas y componentes
+- **Cambio en tiempo real**: Sin reiniciar la app
+- **Formato de moneda**: USD ($1,234.56) / EUR (1.234,56 €)
+- **ARB files**: Sistema estándar de Flutter para l10n
+- **Generación automática**: Clases generadas con flutter gen-l10n
+
+### 🔍 Búsqueda y Filtros
+
+- **Debounce de 500ms**: Reduce llamadas innecesarias
 - **Búsqueda reactiva**: Actualización automática de resultados
-- **Filtrado local**: Por título o ciudad
-- **Feedback visual**: Indicador de búsqueda activa
-- **Limpieza fácil**: Botón para borrar búsqueda
+- **Filtrado combinado**: Búsqueda + ciudad + precio + sort
+- **Feedback visual**: Indicador de filtros activos
+- **Limpieza fácil**: Botón para resetear todos los filtros
+- **Estado persistente**: Los filtros se mantienen durante la sesión
 
 ## 🔧 Arquitectura
 
@@ -350,32 +441,88 @@ CachedNetworkImage(cacheKey: property.id)
 
 #### Providers Principales
 
-- `propertiesNotifierProvider` - Estado de lista de propiedades con paginación
-- `favoritesNotifierProvider` - Estado de favoritos persistente
-- `themeModeProvider` - Estado del tema (claro/oscuro)
-- `searchQueryProvider` - Estado de la búsqueda actual
+**Autenticación**
+
+- `authProvider` - Estado de autenticación (logged in/out, user info)
+- `authRepositoryProvider` - Repositorio de autenticación con flutter_secure_storage
+
+**Configuración**
+
+- `settingsProvider` - Estado de configuración (tema, idioma, moneda)
+- `preferencesServiceProvider` - Servicio de SharedPreferences
+
+**Propiedades**
+
+- `propertiesNotifierProvider` - Lista de propiedades con paginación
+- `favoritesNotifierProvider` - Lista de favoritos persistente
+- `filtersProvider` - Estado de filtros (ciudad, precio, sort)
+- `filteredPropertiesProvider` - Combinación de búsqueda + filtros + propiedades
+- `searchQueryProvider` - Query de búsqueda actual
+- `availableCitiesProvider` - Lista de ciudades únicas para filtro
+
+**Navegación**
+
+- `goRouterProvider` - Router con guards que verifican `authProvider`
 
 #### Ventajas de Riverpod
 
 - ✅ **Type-safe**: Detección de errores en tiempo de compilación
-- ✅ **Testeable**: Fácil de mockear y probar
+- ✅ **Testeable**: Fácil de mockear y probar con overrides
 - ✅ **Dispose automático**: Limpieza automática de recursos
 - ✅ **Dev tools**: Inspección de estado en tiempo real
 - ✅ **No BuildContext**: Providers accesibles desde cualquier lugar
+- ✅ **Composable**: Providers que dependen de otros providers
+- ✅ **Reactive**: Rebuilds automáticos cuando cambia el estado
 
 ## 🚀 Próximas Mejoras
 
 ### ✅ Implementado
 
-- [x] Sistema de temas claro/oscuro con toggle
+- [x] Sistema de autenticación con login/logout
+- [x] Almacenamiento seguro de tokens (flutter_secure_storage)
+- [x] Guards de autenticación en rutas (GoRouter)
+- [x] Pantalla de perfil de usuario
+- [x] Pantalla de configuración completa
+- [x] Sistema de temas: Sistema/Claro/Oscuro
+- [x] Internacionalización ES/EN con 60+ traducciones
+- [x] Formato de moneda USD/EUR reactivo
+- [x] Filtros avanzados (ciudad, precio, ordenamiento)
+- [x] SliverAppBar colapsable en Home
 - [x] Shimmer loading effects
 - [x] Debounce en búsqueda (500ms)
 - [x] Hero animations en imágenes
 - [x] Badge de favoritos con contador
 - [x] Pantalla de favoritos completa
-- [x] Tests de widgets (7 tests pasando)
-- [x] Optimización con isolates
+- [x] Empty states contextuales
+- [x] Optimización con compute() para JSON parsing
 - [x] Cache de SharedPreferences
+- [x] Arquitectura por features
+
+### 🔄 En Progreso
+
+- [ ] Tests unitarios y de integración
+- [ ] Persistencia de filtros en SharedPreferences
+- [ ] AnimatedSwitcher para transiciones suaves
+- [ ] HTTP interceptor con Authorization header
+- [ ] Refresh indicator en listas
+
+### 🎯 Roadmap Futuro
+
+- [ ] Integración con API real de propiedades
+- [ ] Mapa con ubicación de propiedades (Google Maps/Mapbox)
+- [ ] Chat con agentes inmobiliarios
+- [ ] Notificaciones push para propiedades favoritas
+- [ ] Modo comparación de propiedades
+- [ ] Galería de imágenes en detalle (swipeable)
+- [ ] Calculadora de hipoteca
+- [ ] Tours virtuales 360°
+- [ ] Compartir propiedades en redes sociales
+- [ ] Historial de propiedades vistas
+- [ ] Filtros guardados personalizados
+- [ ] Modo offline con sincronización
+- [ ] Autenticación con Google/Apple
+- [ ] Perfil editable con foto
+- [ ] Dashboard con estadísticas
 
 ### Recursos Externos
 
@@ -402,8 +549,10 @@ Para preguntas, sugerencias o colaboraciones:
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.35.3-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/Dart-3.9.2-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
-  <img src="https://img.shields.io/badge/Riverpod-2.5.1-5C6BC0?style=for-the-badge" alt="Riverpod">
+  <img src="https://img.shields.io/badge/Flutter-^3.9.2-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-^3.9.2-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
+  <img src="https://img.shields.io/badge/Riverpod-^2.5.1-5C6BC0?style=for-the-badge" alt="Riverpod">
   <img src="https://img.shields.io/badge/Material-Design_3-757575?style=for-the-badge&logo=material-design&logoColor=white" alt="Material Design 3">
+  <img src="https://img.shields.io/badge/i18n-ES_|_EN-4CAF50?style=for-the-badge" alt="Internationalization">
+  <img src="https://img.shields.io/badge/GoRouter-^14.2.7-00B4AB?style=for-the-badge" alt="GoRouter">
 </p>
