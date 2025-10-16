@@ -26,8 +26,7 @@ class _FilterBarState extends ConsumerState<FilterBar> {
 
     // If filters were cleared externally, reset the local state
     if (!filters.hasActiveFilters &&
-        (_currentRangeValues!.start != 0 ||
-            _currentRangeValues!.end != 1000000)) {
+        (_currentRangeValues!.start != 0 || _currentRangeValues!.end != 5000)) {
       _currentRangeValues = RangeValues(filters.minPrice, filters.maxPrice);
     }
 
@@ -123,8 +122,8 @@ class _FilterBarState extends ConsumerState<FilterBar> {
               RangeSlider(
                 values: _currentRangeValues!,
                 min: 0,
-                max: 1000000,
-                divisions: 100,
+                max: 5000,
+                divisions: 500,
                 labels: RangeLabels(
                   '\$${_currentRangeValues!.start.toInt()}',
                   '\$${_currentRangeValues!.end.toInt()}',

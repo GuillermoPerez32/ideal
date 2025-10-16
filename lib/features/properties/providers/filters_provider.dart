@@ -18,12 +18,12 @@ class FiltersState {
   const FiltersState({
     this.selectedCities = const {},
     this.minPrice = 0,
-    this.maxPrice = 1000000,
+    this.maxPrice = 5000,
     this.sortOption = SortOption.priceAsc,
   });
 
   bool get hasActiveFilters =>
-      selectedCities.isNotEmpty || minPrice > 0 || maxPrice < 1000000;
+      selectedCities.isNotEmpty || minPrice > 0 || maxPrice < 5000;
 
   FiltersState copyWith({
     Set<String>? selectedCities,
