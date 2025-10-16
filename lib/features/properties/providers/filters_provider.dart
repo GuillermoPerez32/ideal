@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum SortOption {
-  priceAsc('Precio: Menor a mayor'),
-  priceDesc('Precio: Mayor a menor'),
-  city('Ciudad A-Z');
+  priceAsc('priceAsc'),
+  priceDesc('priceDesc'),
+  city('city');
 
-  final String label;
-  const SortOption(this.label);
+  final String key;
+  const SortOption(this.key);
 }
 
 class FiltersState {

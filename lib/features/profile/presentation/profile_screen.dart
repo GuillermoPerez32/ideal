@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -11,9 +12,10 @@ class ProfileScreen extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
     final user = authState.user;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
+      appBar: AppBar(title: Text(l10n.profile)),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -52,13 +54,13 @@ class ProfileScreen extends ConsumerWidget {
           // Opciones de menú
           ListTile(
             leading: const Icon(Icons.favorite_outline),
-            title: const Text('Mis Favoritos'),
+            title: Text(l10n.myFavorites),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/favorites'),
           ),
           ListTile(
             leading: const Icon(Icons.settings_outlined),
-            title: const Text('Configuración'),
+            title: Text(l10n.settings),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/settings'),
           ),
@@ -75,7 +77,7 @@ class ProfileScreen extends ConsumerWidget {
                 }
               },
               icon: const Icon(Icons.logout),
-              label: const Text('Cerrar sesión'),
+              label: Text(l10n.logout),
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.error,
                 side: BorderSide(color: theme.colorScheme.error),

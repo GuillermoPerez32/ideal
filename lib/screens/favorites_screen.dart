@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
 import '../models/property.dart';
 import '../widgets/property_card.dart';
@@ -11,14 +12,15 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final favoritesState = ref.watch(favoritesNotifierProvider);
     final propertiesState = ref.watch(propertiesNotifierProvider);
     final authState = ref.watch(authProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Mis Favoritos',
+        title: Text(
+          l10n.myFavorites,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         elevation: 0,
@@ -39,7 +41,7 @@ class FavoritesScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.person_outline),
             onPressed: () => context.push('/profile'),
-            tooltip: 'Mi Perfil',
+            tooltip: l10n.myProfile,
           ),
         ],
       ),
@@ -72,6 +74,7 @@ class FavoritesScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -81,7 +84,7 @@ class FavoritesScreen extends ConsumerWidget {
             Icon(Icons.favorite_border, size: 120, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
-              'No tienes favoritos aún',
+              l10n.noFavoritesYet,
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -89,7 +92,7 @@ class FavoritesScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Explora propiedades y marca tus favoritas tocando el ícono de corazón',
+              l10n.exploreFavorites,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
@@ -99,7 +102,7 @@ class FavoritesScreen extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () => context.go('/'),
               icon: const Icon(Icons.home),
-              label: const Text('Explorar Propiedades'),
+              label: Text(l10n.exploreProperties),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -114,6 +117,7 @@ class FavoritesScreen extends ConsumerWidget {
   }
 
   Widget _buildErrorWidget(BuildContext context, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -123,7 +127,7 @@ class FavoritesScreen extends ConsumerWidget {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'Error al cargar favoritos',
+              l10n.errorLoadingFavorites,
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
@@ -142,6 +146,7 @@ class FavoritesScreen extends ConsumerWidget {
   }
 
   Widget _buildFavoritesList(BuildContext context, List<Property> properties) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         // Header con contador
@@ -153,7 +158,7 @@ class FavoritesScreen extends ConsumerWidget {
               Icon(Icons.favorite, color: Colors.red, size: 20),
               const SizedBox(width: 8),
               Text(
-                '${properties.length} ${properties.length == 1 ? 'propiedad favorita' : 'propiedades favoritas'}',
+                '${properties.length} ${properties.length == 1 ? l10n.favoriteProperty : l10n.favoriteProperties}',
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),

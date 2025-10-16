@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -24,21 +25,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   String? _validateEmail(String? value) {
+    final l10n = AppLocalizations.of(context)!;
     if (value == null || value.isEmpty) {
-      return 'El email es requerido';
+      return l10n.emailRequired;
     }
     if (!value.contains('@')) {
-      return 'Email inválido';
+      return l10n.invalidEmail;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
+    final l10n = AppLocalizations.of(context)!;
     if (value == null || value.isEmpty) {
-      return 'La contraseña es requerida';
+      return l10n.passwordRequired;
     }
     if (value.length < 6) {
-      return 'Mínimo 6 caracteres';
+      return l10n.minimumCharacters;
     }
     return null;
   }
@@ -69,6 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -88,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Bienvenido',
+                    l10n.welcome,
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -96,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Inicia sesión para continuar',
+                    l10n.loginToContinue,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -105,10 +109,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 48),
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.email,
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -119,7 +123,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Contraseña',
+                      labelText: l10n.password,
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
@@ -150,11 +154,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Iniciar sesión'),
+                        : Text(l10n.login),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Tip: Usa cualquier email con @ y contraseña de 6+ caracteres',
+                    l10n.loginTip,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,

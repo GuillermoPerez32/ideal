@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../providers/filters_provider.dart';
 
 class FilterBar extends ConsumerWidget {
@@ -11,6 +12,7 @@ class FilterBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filters = ref.watch(filtersProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,12 +29,20 @@ class FilterBar extends ConsumerWidget {
                   value: filters.sortOption,
                   isExpanded: true,
                   underline: const SizedBox(),
-                  items: SortOption.values.map((option) {
-                    return DropdownMenuItem(
-                      value: option,
-                      child: Text(option.label),
-                    );
-                  }).toList(),
+                  items: [
+                    DropdownMenuItem(
+                      value: SortOption.priceAsc,
+                      child: Text(l10n.priceLowToHigh),
+                    ),
+                    DropdownMenuItem(
+                      value: SortOption.priceDesc,
+                      child: Text(l10n.priceHighToLow),
+                    ),
+                    DropdownMenuItem(
+                      value: SortOption.city,
+                      child: Text(l10n.cityAZ),
+                    ),
+                  ],
                   onChanged: (value) {
                     if (value != null) {
                       ref.read(filtersProvider.notifier).setSortOption(value);
@@ -48,7 +58,7 @@ class FilterBar extends ConsumerWidget {
         if (availableCities.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text('Ciudades', style: theme.textTheme.labelLarge),
+            child: Text(l10n.cities, style: theme.textTheme.labelLarge),
           ),
           SizedBox(
             height: 50,
@@ -83,7 +93,7 @@ class FilterBar extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Rango de precio', style: theme.textTheme.labelLarge),
+                  Text(l10n.priceRange, style: theme.textTheme.labelLarge),
                   Text(
                     '\$${filters.minPrice.toInt()} - \$${filters.maxPrice.toInt()}',
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -120,7 +130,7 @@ class FilterBar extends ConsumerWidget {
                 ref.read(filtersProvider.notifier).clearFilters();
               },
               icon: const Icon(Icons.clear),
-              label: const Text('Limpiar filtros'),
+              label: Text(l10n.clearFilters),
             ),
           ),
       ],

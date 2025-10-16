@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'router/app_router.dart';
+import 'package:ideal/l10n/app_localizations.dart';
 import 'theme.dart';
 import '../features/settings/providers/settings_provider.dart';
 
@@ -38,6 +39,7 @@ class IdealApp extends ConsumerWidget {
           themeMode: settings.themeMode,
           locale: settings.locale,
           localizationsDelegates: const [
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

@@ -9,6 +9,7 @@ import '../features/properties/providers/filtered_properties_provider.dart';
 import '../features/properties/providers/filters_provider.dart';
 import '../features/properties/presentation/widgets/filter_bar.dart';
 import '../features/properties/presentation/widgets/shimmer_placeholder.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -45,8 +46,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final favoritesState = ref.watch(favoritesNotifierProvider);
-    final themeMode = ref.watch(themeModeProvider);
     final favoriteCount = favoritesState.maybeWhen(
       data: (favorites) => favorites.length,
       orElse: () => 0,
@@ -54,33 +55,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Ideal',
+        title: Text(
+          l10n.appTitle,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         actions: [
-          // Botón para cambiar tema
-          IconButton(
-            icon: Icon(
-              themeMode == ThemeMode.light ? Icons.dark_mode : Icons.light_mode,
-            ),
-            onPressed: () {
-              ref.read(themeModeProvider.notifier).toggleTheme();
-            },
-            tooltip: themeMode == ThemeMode.light
-                ? 'Modo Oscuro'
-                : 'Modo Claro',
-          ),
           // Botón de favoritos con badge
           Stack(
             children: [
               IconButton(
                 icon: const Icon(Icons.favorite),
                 onPressed: () => context.push('/favorites'),
-                tooltip: 'Mis Favoritos',
+                tooltip: l10n.myFavorites,
               ),
               if (favoriteCount > 0)
                 Positioned(
@@ -113,7 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.person_outline),
             onPressed: () => context.push('/profile'),
-            tooltip: 'Mi Perfil',
+            tooltip: l10n.myProfile,
           ),
           const SizedBox(width: 8),
         ],
@@ -124,6 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SearchBarWidget(
+              hintText: l10n.searchProperties,
               onChanged: (query) {
                 ref.read(searchQueryProvider.notifier).state = query;
                 if (query.isNotEmpty) {
@@ -159,6 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildErrorWidget(Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -168,7 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'Error al cargar propiedades',
+              l10n.errorLoadingProperties,
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
@@ -187,7 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .read(propertiesNotifierProvider.notifier)
                     .loadProperties(refresh: true);
               },
-              child: const Text('Reintentar'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -221,6 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildPropertiesList(List<Property> properties) {
+    final l10n = AppLocalizations.of(context)!;
     final filters = ref.watch(filtersProvider);
     final searchQuery = ref.watch(searchQueryProvider);
 
@@ -240,7 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'No se encontraron propiedades',
+                l10n.noPropertiesFound,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -248,8 +240,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               const SizedBox(height: 12),
               Text(
                 filters.hasActiveFilters || searchQuery.isNotEmpty
-                    ? 'Intenta ajustar los filtros o términos de búsqueda'
-                    : 'No hay propiedades disponibles en este momento',
+                    ? l10n.adjustFiltersOrSearch
+                    : l10n.noPropertiesAvailable,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
@@ -270,7 +262,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     }
                   },
                   icon: const Icon(Icons.clear_all),
-                  label: const Text('Limpiar filtros'),
+                  label: Text(l10n.clearFilters),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
